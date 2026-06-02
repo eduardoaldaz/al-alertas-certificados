@@ -4,6 +4,8 @@ codeunit 50100 "Revisar Documentos"
     var
         Config: Record "Config Alerta Certificados";
     begin
+        LimpiarLogAntiguo();
+
         if Config.Get('SETUP') then
             ComprobarCertificados(Config."Días Antelación")
         else
@@ -31,7 +33,7 @@ codeunit 50100 "Revisar Documentos"
                     FechaVenc := DT2Date(Cert."Expiry Date");
                     DiasRestantes := FechaVenc - Today;
 
-                    if DiasRestantes < 0 then begin
+                    if (DiasRestantes < 0) and (DiasRestantes >= -60) then begin
                         if not YaAlertadoReciente(Cert.Code) then begin
                             Vencidos += 1;
                             HayAlertas := true;
@@ -40,7 +42,7 @@ codeunit 50100 "Revisar Documentos"
                                 '<tr style="background-color:#fcebeb"><td style="padding:8px">%1</td><td style="padding:8px">%2</td><td style="padding:8px">%3</td><td style="padding:8px"><strong>VENCIDO hace %4 días</strong></td></tr>',
                                 Cert.Code, Cert.Name, Format(FechaVenc), Format(-DiasRestantes));
                         end;
-                    end else if DiasRestantes <= DiasAntelacion then begin
+                    end else if (DiasRestantes >= 0) and (DiasRestantes <= DiasAntelacion) then begin
                         if not YaAlertadoReciente(Cert.Code) then begin
                             PorVencer += 1;
                             HayAlertas := true;
@@ -97,6 +99,16 @@ codeunit 50100 "Revisar Documentos"
         LogAlerta."Días Restantes" := Dias;
         LogAlerta."Notificado" := true;
         LogAlerta.Insert(true);
+    end;
+
+    local procedure LimpiarLogAntiguo()
+    var
+        LogAlerta: Record "Log Alerta Documento";
+    begin
+        LogAlerta.Reset();
+        LogAlerta.SetFilter("Fecha Alerta", '..%1', CreateDateTime(Today - 90, 0T));
+        if not LogAlerta.IsEmpty() then
+            LogAlerta.DeleteAll();
     end;
 
     local procedure EnviarEmail(Vencidos: Integer; PorVencer: Integer; TablaHTML: Text)
