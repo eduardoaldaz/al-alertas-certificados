@@ -30,6 +30,11 @@ page 50103 "Config Alerta Certificados"
                     ApplicationArea = All;
                     ToolTip = 'Enviar alerta cada X días';
                 }
+                field("Días Máx. Alerta Vencido"; Rec."Días Máx. Alerta Vencido")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Cuántos días después de vencido seguir enviando alertas. Por defecto 30.';
+                }
             }
         }
     }
@@ -40,6 +45,7 @@ page 50103 "Config Alerta Certificados"
             Rec.Init();
             Rec."Cód." := 'SETUP';
             Rec."Días Antelación" := 30;
+            Rec."Días Máx. Alerta Vencido" := 30;
             Rec.Insert();
         end;
     end;
