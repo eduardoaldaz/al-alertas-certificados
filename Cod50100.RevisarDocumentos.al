@@ -33,7 +33,7 @@ codeunit 50100 "Revisar Documentos"
                     FechaVenc := DT2Date(Cert."Expiry Date");
                     DiasRestantes := FechaVenc - Today;
 
-                    if (DiasRestantes < 0) and (DiasRestantes >= -60) then begin
+                    if (DiasRestantes < 0) and (DiasRestantes >= -30) then begin
                         if not YaAlertadoReciente(Cert.Code) then begin
                             Vencidos += 1;
                             HayAlertas := true;
