@@ -23,6 +23,11 @@ table 50102 "Config Alerta Certificados"
             Caption = 'Enviar alerta cada X días';
             InitValue = 5;
         }
+        field(5; "Días Máx. Alerta Vencido"; Integer)
+        {
+            Caption = 'Días máx. alerta vencido';
+            InitValue = 30;
+        }
     }
 
     keys

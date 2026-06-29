@@ -18,7 +18,7 @@ pageextension 50101 "Certificados Ext" extends "Certificate List"
                 var
                     Revisar: Codeunit "Revisar Documentos";
                 begin
-                    Revisar.ComprobarCertificados(7);
+                    Revisar.ComprobarCertificados(7, 30);
                     Message('Revisión completada. Consulta el Log de Alertas y tu email.');
                 end;
             }

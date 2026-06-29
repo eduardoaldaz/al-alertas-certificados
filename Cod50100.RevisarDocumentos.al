@@ -7,12 +7,12 @@ codeunit 50100 "Revisar Documentos"
         LimpiarLogAntiguo();
 
         if Config.Get('SETUP') then
-            ComprobarCertificados(Config."Días Antelación")
+            ComprobarCertificados(Config."Días Antelación", Config."Días Máx. Alerta Vencido")
         else
-            ComprobarCertificados(30);
+            ComprobarCertificados(30, 30);
     end;
 
-    procedure ComprobarCertificados(DiasAntelacion: Integer)
+    procedure ComprobarCertificados(DiasAntelacion: Integer; DiasMaxVencido: Integer)
     var
         Cert: Record "Isolated Certificate";
         FechaLimite: Date;
@@ -23,6 +23,8 @@ codeunit 50100 "Revisar Documentos"
         CuerpoEmail: Text;
         HayAlertas: Boolean;
     begin
+        if DiasMaxVencido <= 0 then
+            DiasMaxVencido := 30;
         FechaLimite := Today + DiasAntelacion;
         CuerpoEmail := '';
 
@@ -33,7 +35,7 @@ codeunit 50100 "Revisar Documentos"
                     FechaVenc := DT2Date(Cert."Expiry Date");
                     DiasRestantes := FechaVenc - Today;
 
-                    if (DiasRestantes < 0) and (DiasRestantes >= -30) then begin
+                    if (DiasRestantes < 0) and (DiasRestantes >= -DiasMaxVencido) then begin
                         if not YaAlertadoReciente(Cert.Code) then begin
                             Vencidos += 1;
                             HayAlertas := true;
