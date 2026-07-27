@@ -57,9 +57,3 @@ Acceder a la página **Configuración Alertas Certificados** (categoría Adminis
 3. Acceder a **Configuración Alertas Certificados** y establecer los destinatarios de email y los parámetros de frecuencia.
 4. Programar la codeunit `50100 "Revisar Documentos"` mediante una cola de trabajo (Job Queue) para ejecución diaria.
 
-## Información
-
-| Campo | Valor |
-|-------|-------|
-| Publisher | Global Food Link |
-| Versión | 1.3.0.0 |
